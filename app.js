@@ -1,7 +1,16 @@
 import { Telegraf } from 'telegraf'
 import mysql from 'mysql2/promise';
 import dotenv from "dotenv";
+
 dotenv.config()
+
+const db = mysql.createPool({
+  host: "localhost",
+  user: "root",
+  password: "",
+  database: "menus"
+});
+
 const bot = new Telegraf(process.env.BOT_TOKEN)
 
 bot.telegram.setChatMenuButton([
@@ -11,17 +20,9 @@ bot.telegram.setChatMenuButton([
   { command: "Reset", description: "Show restaurant menu" }
 ]);
 
-const db = mysql.createPool({
-  host: "localhost",
-  user: "root",
-  password: "",
-  database: "menus"
-});
-
 bot.start((ctx) =>
   ctx.reply(
-    "👋 Welcome to *FlavorHub Restaurant Bot*!\n\n" +
-    "Scan a QR code at your table to instantly access our digital menu. " +
+    "👋 Welcome to FlavorHub Restaurant Bot !\n\n" +
     "Browse meals with pictures, check ingredients, explore categories, " +
     "and enjoy a smooth, responsive ordering experience — all from your phone.\n\n" +
     "🍽️ How can we help you today ? ",
@@ -51,30 +52,6 @@ bot.command("contact", async (ctx) => {
   );
   // Send map pin
   ctx.replyWithLocation(9.010792, 38.761253); // Replace with your coordinates
-});
-
-bot.command("start", (ctx) => {
-  ctx.reply(
-    "👋 Welcome to *FlavorHub Restaurant Bot*!\n\n" +
-    "Scan a QR code at your table to instantly access our digital menu. " +
-    "Browse meals with pictures, check ingredients, explore categories, " +
-    "and enjoy a smooth, responsive ordering experience — all from your phone.\n\n" +
-    "🍽️ How can we help you today ? ",
-    {
-      reply_markup: {
-        inline_keyboard: [
-          [
-            { text: "Menus", callback_data: "menus" },
-            { text: "Categories", callback_data: "categories" }
-          ],
-          [
-            { text: "About_Us", callback_data: "about" },
-            { text: "Clear", callback_data: "clear" }
-          ]
-        ]
-      }
-    }
-  )
 });
 
 
